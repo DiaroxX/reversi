@@ -16,7 +16,7 @@ class pawn:
         elif self.color == 1:
             return "▢"
 
-    def flip(self):
+    def Flip(self):
         self.color = 1-self.color
         return self
 
@@ -36,7 +36,7 @@ class board:
         return self.grid
 
 
-    def print(self):
+    def Print(self):
         for i in range(self.size):
             str_row = ""
             for j in range(self.size):
@@ -44,14 +44,14 @@ class board:
             print(str_row[:-3])
 
 
-    def setup(self, game):
+    def Setup(self, game):
         if game == "reversi":
             self.grid[3][3], self.grid[4][4] = pawn(0), pawn(0)
             self.grid[3][4], self.grid[4][3] = pawn(1), pawn(1)
         return self.grid
 
 
-    def count_flips(self, x, y, color=None):
+    def CountFlips(self, x, y, color=None):
         if color == None:
             color = self[x][y].color
 
@@ -74,26 +74,25 @@ class board:
         return flips
 
 
-    def possible_move(self, x, y, color):
-        #print(self.count_flips(x, y, color))
-        return len(self.count_flips(x, y, color)) != 0 #self dans les arguments
+    def PossibleMove(self, x, y, color):
+        return len(self.CountFlips(x, y, color)) != 0 #self dans les arguments
 
 
-    def flip_pawns(self, x, y):
-        for pawn in self.count_flips(x, y):
-            self.grid[pawn[0]][pawn[1]].flip()
+    def FlipPawns(self, x, y):
+        for pawn in self.CountFlips(x, y):
+            self.grid[pawn[0]][pawn[1]].Flip()
 
 
-    def possibles_moves(self, color):
+    def PossiblesMoves(self, color):
         all_possibles_moves = []
         for i in range(self.size):
             for j in range(self.size):
-                if self.possible_move(i, j, color):
+                if self.PossibleMove(i, j, color):
                     all_possibles_moves.append([i, j])
         return all_possibles_moves
 
 
-    def evaluate(self):
+    def Evaluate(self):
         score = [0, 0]
         possible_moves = [0, 0]
 
@@ -103,15 +102,15 @@ class board:
                     score[self.grid[i][j]] += 1
                 else:
                     for x in range(2):
-                        if possible_moves(i, j, x):
+                        if self.PossibleMove(i, j, x):
                             possible_moves[x] += 1
 
 
 
 #main code start here
 grid = board(8)
-grid.setup("reversi")
-grid.print()
+grid.Setup("reversi")
+grid.Print()
 player = 0
 score = [2, 2]
 
@@ -144,7 +143,7 @@ for rounds in range(60):
                 column = None
 
         if grid.grid[column][row] != None:
-            if grid.possible_move(column, row, player):
+            if grid.PossibleMove(column, row, player):
                 move_possible = True
 
                 rounds += 1
@@ -152,6 +151,6 @@ for rounds in range(60):
 
 
     grid.grid[row][column] = pawn(1-player)
-    grid.flip_pawns(row, column)
-    score[1-player] = grid.count_flips(row, column)
-    grid.print()
+    grid.FlipPawns(row, column)
+    score[1-player] = grid.CountFlips(row, column)
+    grid.Print()
