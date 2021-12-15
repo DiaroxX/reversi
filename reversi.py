@@ -142,14 +142,15 @@ for rounds in range(60):
             except:
                 column = None
 
-        if grid.grid[column][row] != None and grid.PossibleMove(column, row, player):
+        if grid.grid[column][row] != None and grid.PossibleMove(row, column, player):
             move_possible = True
 
     grid.grid[row][column] = pawn(player)
     grid.FlipPawns(row, column)
     score[player] = grid.CountFlips(row, column)
     grid.Print()
-    print(grid.PossiblesMoves(player))
 
     rounds += 1
     player = 1-player
+
+    print(grid.PossiblesMoves(player))
