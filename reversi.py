@@ -1,4 +1,9 @@
-class pawn:
+"""Reversi Game
+Authors : DiaroxX : https://github.com/DiaroxX
+          Colnup : https://github.com/Colnp"""
+
+
+class Pawn():
     """
     Can be 0 or 1 depend of the color
     0 for black
@@ -9,50 +14,52 @@ class pawn:
         self.color = color
 
     def __repr__(self):
-        if self.color == None:
+        if self.color is None:
             return " "
-        elif self.color == 0:
+        if self.color == 0:
             return "◼"
-        elif self.color == 1:
+        if self.color == 1:
             return "▢"
 
-    def Flip(self):
+    def flip(self):
+        """Change the pawn color"""
         self.color = 1-self.color
         return self
 
 
-class board:
+class Board():
+    """Class wrapping the board"""
+
     def __init__(self, size, place_holder=None):
         self.size = size
-        self.place_holder = pawn(place_holder)
-        self.grid = [[self.place_holder for i in range(size)] for j in range(size)]
-
+        self.place_holder = Pawn(place_holder)
+        self.grid = [
+            [self.place_holder for i in range(size)] for j in range(size)]
 
     def __getitem__(self, i):
         return self.grid[i]
 
-
     def __repr__(self):
         return self.grid
 
-
-    def Print(self):
+    def show(self):
+        """Print the board in a nice way"""
         for i in range(self.size):
             str_row = ""
             for j in range(self.size):
                 str_row += str(self[i][j]) + " | "
             print(str_row[:-3])
 
-
-    def Setup(self, game):
+    def setup(self, game):
+        """Setup the board"""
         if game == "reversi":
-            self.grid[3][3], self.grid[4][4] = pawn(0), pawn(0)
-            self.grid[3][4], self.grid[4][3] = pawn(1), pawn(1)
+            self.grid[3][3], self.grid[4][4] = Pawn(0), Pawn(0)
+            self.grid[3][4], self.grid[4][3] = Pawn(1), Pawn(1)
         return self.grid
 
-
-    def CountFlips(self, x, y, color=None):
-        if color == None:
+    def count_flips(self, x, y, color=None):
+        """Count the number of flips for the move x,y"""
+        if color is None:
             color = self[x][y].color
 
         flips = []
@@ -61,11 +68,12 @@ class board:
             for j in range(-1, 2):
                 if i != 0 or j != 0:
                     temp_flips = []
-                    for distance in range(1, round(min((3.5*i) + 3.5 - (x*i), (3.5*j) + 3.5 - (y*j)))): #need to simplify
-                        if self[distance*i + x][distance*j + y].color == None:
+                    # need to simplify
+                    for distance in range(1, round(min((3.5*i) + 3.5 - (x*i), (3.5*j) + 3.5 - (y*j)))):
+                        if self[distance*i + x][distance*j + y].color is None:
                             break
 
-                        elif self[distance*i + x][distance*j + y].color == 1-color:
+                        if self[distance*i + x][distance*j + y].color == 1-color:
                             temp_flips.append((distance*i + x, distance*j + y))
 
                         elif self[distance*i + x][distance*j + y].color == color:
@@ -73,84 +81,89 @@ class board:
                             break
         return flips
 
+    def is_move_possible(self, x, y, color):
+        """Return True if the move is possible"""
+        return len(self.count_flips(x, y, color)) != 0
 
-    def PossibleMove(self, x, y, color):
-        return len(self.CountFlips(x, y, color)) != 0 #self dans les arguments
+    def flip_pawns(self, x, y):
+        """Flip all pawns for the move x,y"""
+        for pawn in self.count_flips(x, y):
+            self.grid[pawn[0]][pawn[1]].flip()
 
-
-    def FlipPawns(self, x, y):
-        for pawn in self.CountFlips(x, y):
-            self.grid[pawn[0]][pawn[1]].Flip()
-
-
-    def PossiblesMoves(self, color):
+    def possible_move_list(self, color):
+        """Return a list of possible moves"""
         all_possibles_moves = []
         for i in range(self.size):
             for j in range(self.size):
-                if self.PossibleMove(i, j, color):
+                if self.is_move_possible(i, j, color):
                     all_possibles_moves.append([i, j])
         return all_possibles_moves
 
-
-    def Evaluate(self):
+    def evaluate(self):
+        """Evaluate the board"""
         score = [0, 0]
         possible_moves = [0, 0]
 
         for i in range(self.size):
             for j in range(self.size):
-                if type(self.grid[i][j]) == pawn:
+                if isinstance(self.grid[i][j], Pawn):
                     score[self.grid[i][j]] += 1
                 else:
                     for x in range(2):
-                        if self.PossibleMove(i, j, x):
+                        if self.is_move_possible(i, j, x):
                             possible_moves[x] += 1
 
 
 
-#main code start here
-grid = board(8)
-grid.Setup("reversi")
-grid.Print()
-player = 0
-score = [2, 2]
+# Valid inputs are numbers between 0 and board size
+def enforce_valid_input(prompt: str, board: Board) -> int:
+    """Ask user for input and check if it is valid"""
+    while True:
+        try:
+            choice = int(input(prompt))
+            if 0 <= choice < board.size:
+                raise ValueError
+            return choice
+        except ValueError:
+            print("Please enter a valid number")
 
 
+def main():
+    """Main game function"""
+    grid = Board(8)
 
-for rounds in range(60):
-    move_possible = None
-    while move_possible == None:
+    grid.setup("reversi")
+    grid.show()
+    curren_player = 0
+    score = [2, 2]
 
-        row = None
-        while row == None:
-            row = input("Player n°" + str(player) +", row of the next move: ")
-            try:
-                row = int(row)
-                if 0 > row or row > 7:
-                    row = None
+    for rounds in range(60):
+        move_possible = False
+        while not move_possible:
 
-            except:
-                row = None
+            # Check if player can move, if not, switch player
+            if grid.possible_move_list(curren_player) == []:
+                print("No possible move for player", curren_player)
+                curren_player = 1 - curren_player
+                continue
 
-        column = None
-        while column == None:
-            column = input("Player n°" + str(player) +", column of the next move: ")
-            try:
-                column = int(column)
-                if 0 > column or column > 7:
-                    column = None
+            row = enforce_valid_input(
+                "Player " + str(curren_player+1) + "(ligne): ", grid)
+            column = enforce_valid_input(
+                "Player " + str(curren_player+1) + "(colone): ", grid)
 
-            except:
-                column = None
+            move_possible = grid.is_move_possible(row, column, curren_player)
 
-        if grid.grid[column][row] != None and grid.PossibleMove(row, column, player):
-            move_possible = True
+        grid.grid[row][column] = Pawn(curren_player)
+        grid.flip_pawns(row, column)
+        score[curren_player] = grid.count_flips(row, column)
+        grid.show()
 
-    grid.grid[row][column] = pawn(player)
-    grid.FlipPawns(row, column)
-    score[player] = grid.CountFlips(row, column)
-    grid.Print()
+        rounds += 1
+        curren_player = 1-curren_player
 
-    rounds += 1
-    player = 1-player
+        print(grid.possible_move_list(curren_player))
 
-    print(grid.PossiblesMoves(player))
+
+if __name__ == '__main__':
+    main()
