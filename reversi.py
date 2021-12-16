@@ -113,9 +113,9 @@ class Board():
                         if self.is_move_possible(i, j, x):
                             possible_moves[x] += 1
 
+
+
 # Valid inputs are numbers between 0 and board size
-
-
 def enforce_valid_input(prompt: str, board: Board) -> int:
     """Ask user for input and check if it is valid"""
     while True:
