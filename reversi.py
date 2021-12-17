@@ -3,6 +3,8 @@ Authors : DiaroxX : https://github.com/DiaroxX
           Colnup : https://github.com/Colnp
           Prof-redstone (le BG de la street) : https://github.com/prof-redstone"""
 
+#test pour voir si ça marche
+
 
 class Pawn():
     """
