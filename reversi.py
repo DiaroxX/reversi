@@ -1,6 +1,7 @@
 """Reversi Game
 Authors : DiaroxX : https://github.com/DiaroxX
-          Colnup : https://github.com/Colnp"""
+          Colnup : https://github.com/Colnp
+          Prof-redstone (le BG de la street) : https://github.com/prof-redstone"""
 
 
 class Pawn():
