@@ -124,7 +124,7 @@ def enforce_valid_input(prompt: str, board: Board) -> int:
     while True:
         try:
             choice = int(input(prompt))
-            if 0 <= choice < board.size:
+            if not 0 <= choice < board.size:
                 raise ValueError
             return choice
         except ValueError:
@@ -149,6 +149,8 @@ def main():
                 print("No possible move for player", curren_player)
                 curren_player = 1 - curren_player
                 continue
+            
+            print(f"Possible moves : {grid.possible_move_list(curren_player)}")
 
             row = enforce_valid_input(
                 "Player " + str(curren_player+1) + "(ligne): ", grid)
@@ -165,7 +167,6 @@ def main():
         rounds += 1
         curren_player = 1-curren_player
 
-        print(grid.possible_move_list(curren_player))
 
 
 if __name__ == '__main__':
