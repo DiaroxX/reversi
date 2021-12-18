@@ -1,0 +1,61 @@
+{
+    // Pylint c'est le feu
+    "python.linting.pylintEnabled": true,
+    "python.linting.enabled": true,
+    // Python specific
+    "autoDocstring.docstringFormat": "numpy",
+    "python.languageServer": "Pylance",
+    // Git
+    "git.autofetch": true,
+    "git.confirmSync": false,
+    "gitlens.hovers.currentLine.over": "line",
+    // For better comments
+    "commentAnchors.tagHighlights.enabled": false,
+    "better-comments.tags": [
+        {
+            "tag": "anchor",
+            "color": "#A1B825",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "todo",
+            "color": "#FF8C00",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "note",
+            "color": "#f4a808",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "REVIEW",
+            "color": "#5ecf19",
+            "strikethrough": false,
+            "underline": false,
+            "backgroundColor": "transparent",
+            "bold": false,
+            "italic": false
+        },
+        {
+            "tag": "fixme",
+            "color": "#e63d35",
+            "strikethrough": false,
+            "underline": true,
+            "backgroundColor": "#744f03",
+            "bold": true,
+            "italic": false
+        },
+    ]
+}
