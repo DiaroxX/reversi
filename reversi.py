@@ -116,7 +116,6 @@ class Board():
                             possible_moves[x] += 1
 
 
-
 # Valid inputs are numbers between 0 and board size
 def enforce_valid_input(prompt: str, board: Board) -> int:
     """Ask user for input and check if it is valid"""
@@ -141,6 +140,8 @@ def main():
     score = [2, 2]
 
     for rounds in range(60):
+        print(f"\nRound {rounds+1}")
+        print("Current player :", "◼" if curren_player == 0 else "▢")
         move_possible = False
         while not move_possible:
 
@@ -149,7 +150,7 @@ def main():
                 print("No possible move for player", curren_player)
                 curren_player = 1 - curren_player
                 continue
-            
+
             print(f"Possible moves : {grid.possible_move_list(curren_player)}")
 
             row = enforce_valid_input(
@@ -166,7 +167,6 @@ def main():
 
         rounds += 1
         curren_player = 1-curren_player
-
 
 
 if __name__ == '__main__':
